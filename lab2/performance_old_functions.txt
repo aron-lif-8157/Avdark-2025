@@ -1,0 +1,17 @@
+lock test
+--> Performance: 8547773 ops/s
+--> Performance: 9064943 ops/s
+--> Performance: 8739819 ops/s
+--> Performance: 8349180 ops/s
+
+inc/dec atomic test
+--> Performance: 15593468 ops/s
+--> Performance: 16192116 ops/s
+--> Performance: 16758719 ops/s
+--> Performance: 15374795 ops/s
+
+compare exchange atomic test
+--> Performance: 9461666 ops/s
+--> Performance: 9943398 ops/s
+--> Performance: 14602737 ops/s
+--> Performance: 9539588 ops/s
