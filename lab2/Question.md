@@ -101,3 +101,20 @@ Lock guard fungerar ganska enkelt i teorin.
 lock_guard fungerar nästan som en lokal variabel. Låset låses när det skapas i början av funktionen och när funktionen returnerar eller kommer till sitt slut så går alla locala variabler och vår lock_guard out of scope och med det låses mutex låset upp.
 
 # Memory
+## Task 1
+**hur relaxed kan vår memory ordering model vara?**
+
+Ordningen spelar ingen roll så vi kan ha helt relaxed.
+Detta är eftersom varje uppdatering sker med atomic operationer. Så operationerna kommer aldrig ske samtidigt men kanske i olika ordningar vilket är helt okej.
+
+## Task 2
+**Kolla dekker, lös dekker med memory fences, hur relaxed kan den vara?**
+
+vi lägger in 4 fences markerade med rött.
+Memory fences hindrar reads och writes från innan fence att byta plats med dem efter fencet.
+
+Det finnd 3 olika
+acquire -> hindrar **tidigare reads** från att flyttas mellan fence
+release -> hindrar **tidigare writes** från att flytta mellan fence
+seq_cst -> hindrar **både** reads och writes från att flyttas mellan fence
+
