@@ -67,3 +67,31 @@ We can se that :
 
 # Task B
 
+## T1
+It works as expected. We are using a std::mutex which is a mutual exclusion lock meaning only one thrad have access to the ritical setion at a time. Mutex locks ensure proper synchronization between threads.
+
+## T2
+It works. Our two variables, flag and turn, are both atomic so every update to these value will inhearently be atomic. the busywaiting is needed to allow for execution when the thread is available which it will be sooner or later it will se the value change and execute it's action.
+
+## T3
+**Language memory model**
+the memory model for our c++ is Sequential Consistency by default when using std::atomic
+
+**Memory model of hardware**
+This of course depends on the hardware the code is being run on but in our case we ran on a x86 architecture.
+This means that the hardware Memory model used is Total store ordering or TSO. This doesn't really affect anything since the program is relying on the c++ memory model.
+
+**Which memory model are we programming for here?**
+We are programming for the c++ Memory model used for atomic operations, so we are programming for sequential consictency
+
+## T4
+
+
+## T5
+The faster implementation is using the mutex locks.
+Mutex locks are implemented using OS-level synchronization which is slower than atomic operatiosn but faster then busy waiting. Since our implementation of dekkers algorithm uses busy waiting it will always be slower then mutex locks.
+The difference between busy waiting and mutex locks is that busy waiting will use the cpu to do it's check constantly while mutex locks get put to sleep when waiting and then awoken.
+One could almost list it like this.
+Fastest: atomic operations.
+Middle: mutex.
+Slowest: busy waiting
