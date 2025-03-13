@@ -96,4 +96,8 @@ Mutex lås sätts i sleep tills en förändring observeras av CPU:n då skickas 
 
 # Lock guards
 
-## Task 1
+## Task 1 / 2
+Lock guard fungerar ganska enkelt i teorin.
+lock_guard fungerar nästan som en lokal variabel. Låset låses när det skapas i början av funktionen och när funktionen returnerar eller kommer till sitt slut så går alla locala variabler och vår lock_guard out of scope och med det låses mutex låset upp.
+
+# Memory
