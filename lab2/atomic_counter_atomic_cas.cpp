@@ -7,6 +7,8 @@ atomic_counter_atomic_cas::atomic_counter_atomic_cas()
 
 int atomic_counter_atomic_cas::increment() {
     // using atomic compare and exchange (CAS) operations
+    // Vi laddar in värder och sen jämför vi om det är samma värde som vi laddade in
+    // om det är samma värde så byter vi ut det med värdet +1
     int prev_value = m_value.load();
     while (!m_value.compare_exchange_weak(prev_value, prev_value+1)) {
     }

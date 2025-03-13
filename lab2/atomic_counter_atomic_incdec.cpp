@@ -6,14 +6,14 @@ atomic_counter_atomic_incdec::atomic_counter_atomic_incdec()
 }
 
 int atomic_counter_atomic_incdec::increment() {
-    // using atomic fetch_add operations
+    // using atomic fetch_add operations nad load
     int prev_value = m_value.load();
     m_value.fetch_add(1);
     return prev_value;
 }
 
 int atomic_counter_atomic_incdec::decrement() {
-    // using atomic fetch_sub operations
+    // using atomic fetch_sub operations and load
     int prev_value = m_value.load();
     m_value.fetch_sub(1);
     return prev_value;
