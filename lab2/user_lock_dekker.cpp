@@ -7,7 +7,6 @@ user_lock_dekker::user_lock_dekker()
 }
 
 void user_lock_dekker::lock(int thread_id) {
-    // TODO: Implement the lock acquire part of the Dekker algorithm here
     m_flag[thread_id] = true;                   // Då variabeln är atomic blir denna händelse också atomic
     while (m_flag[1 - thread_id]) {             // Kollar om den andra flaggan är true
         if (m_turn != thread_id) {              // Om det inte är min tur
@@ -23,7 +22,6 @@ void user_lock_dekker::lock(int thread_id) {
 
 
 void user_lock_dekker::unlock(int thread_id) {
-    // TODO: Implement the lock release part of the Dekker algorithm here
     m_turn = 1 - thread_id;
     m_flag[thread_id] = false;
 }

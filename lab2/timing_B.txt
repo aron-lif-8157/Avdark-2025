@@ -1,0 +1,11 @@
+lock test
+--> Performance: 9047511 ops/s
+--> Performance: 7531141 ops/s
+--> Performance: 8164714 ops/s
+--> Performance: 7308349 ops/s
+
+inc/dec Dekker test
+--> Performance: 3337033 ops/s
+--> Performance: 3356907 ops/s
+--> Performance: 3368645 ops/s
+--> Performance: 3614265 ops/s

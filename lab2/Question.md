@@ -1,16 +1,3 @@
-- [ ] A
-	- [x] 1
-	- [x] 2
-	- [x] 3
-	- [x] 4
-	- [ ] 5
-	- [ ] comment code
-- [ ] B
-	- [ ] 1
-	- [ ] 2
-	- [ ] 3
-	- [ ] 4
-	- [ ] 5
 
 # Task A
 ## Task 1
@@ -68,30 +55,45 @@ We can se that :
 # Task B
 
 ## T1
-It works as expected. We are using a std::mutex which is a mutual exclusion lock meaning only one thrad have access to the ritical setion at a time. Mutex locks ensure proper synchronization between threads.
+Det fungerar vilket är förväntat.
+vi använder oss av den inbyggda mutex låset i C som garanterar mutual exclusion. Detta innebär att endast en tråd får tillgång till den kritiska delen av koden.
 
 ## T2
-It works. Our two variables, flag and turn, are both atomic so every update to these value will inhearently be atomic. the busywaiting is needed to allow for execution when the thread is available which it will be sooner or later it will se the value change and execute it's action.
+Det fungerar, våra två variabler flag och turn är båda atomic so varje uppdatering till dessa variabler blir utförda atomic.
+Busywaiting används för att tråden ska bevaka när den får tillgång till att utföras vilket vi vet att vi kommer får för eller senare.
 
 ## T3
 **Language memory model**
-the memory model for our c++ is Sequential Consistency by default when using std::atomic
+Memory model för c++ är sequential consistency som standard om inget annat sägs.
+Sequential consisteny garanterar att trådarna upplever alla sin operation från top till bot.
+Alltså att alla store och loads sker i den ordningen de skrivs ut / används
 
 **Memory model of hardware**
-This of course depends on the hardware the code is being run on but in our case we ran on a x86 architecture.
-This means that the hardware Memory model used is Total store ordering or TSO. This doesn't really affect anything since the program is relying on the c++ memory model.
+Detta beror såklart på hårdvaran som koden utförs på men på den datorn som vi har kört koden på använder sig av x86 arkitekturen.
+ x86 arkitekturen avndäner sig av total sotre ordering.
+ Total store ordering använder sig av en writeback buffer så writebacks sker inte alltid som den ser ut att göra i koden.
+
+the memory ordering model på hårdvaran påverkar inte programmet egentligen då c++ har sin egen memory ordering model.
 
 **Which memory model are we programming for here?**
-We are programming for the c++ Memory model used for atomic operations, so we are programming for sequential consictency
+Vi programmerar för c++ meory modelen vilket innebär att vi programmerar för sequential consictency.
+
 
 ## T4
-
+Om vi hade haft en annan memory ordering modell så hade den varit mer relaxed. Detta hade kunnat innebära att vi behövt implementera mer synkronisering i koden.
 
 ## T5
-The faster implementation is using the mutex locks.
-Mutex locks are implemented using OS-level synchronization which is slower than atomic operatiosn but faster then busy waiting. Since our implementation of dekkers algorithm uses busy waiting it will always be slower then mutex locks.
-The difference between busy waiting and mutex locks is that busy waiting will use the cpu to do it's check constantly while mutex locks get put to sleep when waiting and then awoken.
-One could almost list it like this.
-Fastest: atomic operations.
-Middle: mutex.
-Slowest: busy waiting
+Den snabbare implementeringen är de inbyggda mutex låsen.
+Mutex lås är implementerade på en OS nivå där synxhronizering är långsammare än atomic operations men snabbare än busy waiting.
+Eftersom vår dekker implementation är beroende av busy waiting så är det förväntat att den kommer vara långsamare trots att den använder sig av atomic operations som vanligtvis är snabbare än mutex
+
+Busy waiting är så långsamt eftersom den använder CPU:n för att kontinuerligt kolla om det skett någon förändring för lås variabeln.
+Mutex lås sätts i sleep tills en förändring observeras av CPU:n då skickas en signal för att väcka mutex låset.
+
+
+
+# Bonus
+
+# Lock guards
+
+## Task 1
