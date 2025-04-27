@@ -4,10 +4,12 @@ lock test
 --> Performance: 12758692 ops/s
 --> Performance: 12612062 ops/s
 inc/dec atomic test
+
 --> Performance: 43583075 ops/s
 --> Performance: 43420648 ops/s
 --> Performance: 43311746 ops/s
 --> Performance: 43572962 ops/s
+
 compare exchange atomic test
 --> Performance: 45390060 ops/s
 --> Performance: 43630928 ops/s
