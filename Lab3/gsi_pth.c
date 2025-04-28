@@ -26,12 +26,14 @@ const int gsi_is_parallel = 1;
 /**
  * Thread data structure passed to the thread entry function.
  */
+//! The padding is the solutions for task 4
 typedef struct {
-	int thread_id;
-	pthread_t thread;
-	double error;
-	char __pad[64 - sizeof(int) - sizeof(pthread_t) - sizeof(double)];
-} thread_info_t;
+	int thread_id;		//thread id for the thread application level identifier (used for debbuging etc)
+	pthread_t thread;	//pthread handle used for join later on
+	double error;		//used to sum up its local errors
+	char __pad[64 - sizeof(int) - sizeof(pthread_t) - sizeof(double)]; // padding
+																	// so each struct sits on one complete cacheline
+} thread_info_t;													// This is to avoid false sharing
 
 /** Vector with information about all active threads */
 static thread_info_t *threads = NULL;
@@ -50,15 +52,18 @@ void gsi_init()
 	gs_verbose_printf("\t****  Initializing the environment ****\n");
 
 	/* Allocate thread info */
-	threads = malloc(gs_nthreads * sizeof(thread_info_t));
+	threads = malloc(gs_nthreads * sizeof(thread_info_t));	// allocate the data for each threads thread info here
 	if (!threads) {
 		fprintf(stderr,
 				"Failed to allocate memory for thread information.\n");
 		exit(EXIT_FAILURE);
 	}
 
+	//TODO: förstå mig på denna!
 	/* Initialize global error to force at least one iteration */
-	global_error = gs_tolerance + 1.0;
+	global_error = gs_tolerance + 1.0; // We need to sett a starting global
+										//error so we actually itterate once in the beggining
+
 
 	/* Allocate and zero progress counters */
 	progress = calloc(gs_nthreads, sizeof(int));
