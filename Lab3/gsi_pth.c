@@ -115,12 +115,15 @@ static void *thread_compute(void *_self)
 		self->error = 0.0;
 
 		/* Pipelined row sweep with acquire-release semantics */
-		for (int row = 1; row < gs_size - 1; row++) {
+		for (int row = 1; row < gs_size - 1; row++) {	//! only one thread works on a row at a time
 			/* Acquire-load: wait until left neighbor has done this row */
 			if (tid > 0) {
 				while (__atomic_load_n(&progress[tid-1], __ATOMIC_ACQUIRE) < row) {
-					/* spin-wait */
-				}
+					/* spin-wait */			//Atomic_acquire tells the compiler that no
+				}							// reads or writes after this acquire is allowed
+											// to be moved before this load
+											// AKA once the load returns a value, all the writes the other
+											// thread did before its release-store are now visible to you
 			}
 
 			/* Perform Gauss-Seidel update on [row][lbound..rbound) */
@@ -136,7 +139,11 @@ static void *thread_compute(void *_self)
 			}
 
 			/* Release-store: publish completion of this row */
-			__atomic_store_n(&progress[tid], row, __ATOMIC_RELEASE);
+			__atomic_store_n(&progress[tid], row, __ATOMIC_RELEASE);	// Atomic_release tells the compiler that no
+																		//reads or write that happend before this relese
+																		// can be reordered before it.
+																		// AKA once the store is done
+																		// all threads can see the updated values
 		}
 
 		/* Last thread reduces into global_error (relaxed) */
