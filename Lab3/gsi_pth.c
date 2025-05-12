@@ -118,7 +118,7 @@ static void *thread_compute(void *_self)
 		for (int row = 1; row < gs_size - 1; row++) {	//! only one thread works on a row at a time
 			/* Acquire-load: wait until left neighbor has done this row */
 			if (tid > 0) {
-				while (__atomic_load_n(&progress[tid-1], __ATOMIC_ACQUIRE) < row) {
+				while (__atomic_load_n(&progress[tid-1], __ATOMIC_ACQUIRE) < row) { //guarantess that we can read all of the updated rows when we get here.
 					/* spin-wait */			//Atomic_acquire tells the compiler that no
 				}							// reads or writes after this acquire is allowed
 											// to be moved before this load
@@ -139,7 +139,8 @@ static void *thread_compute(void *_self)
 			}
 
 			/* Release-store: publish completion of this row */
-			__atomic_store_n(&progress[tid], row, __ATOMIC_RELEASE);	// Atomic_release tells the compiler that no
+			__atomic_store_n(&progress[tid], row, __ATOMIC_RELEASE); // guarantess that we publish all the row updates when we get here.
+																		// Atomic_release tells the compiler that no
 																		//reads or write that happend before this relese
 																		// can be reordered before it.
 																		// AKA once the store is done
